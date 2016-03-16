@@ -1,0 +1,28 @@
+#total{
+			margin:auto;padding:20px;
+		}
+
+		#smallPic{
+			float:left;width:224px;height: 157px;border:1px solid gray;padding: 3px;position: relative;
+			margin-right:20px;overflow: hidden;
+		}
+
+		#mark{
+			width:224px;height:157px;background: red;position: absolute;top:3px;left:3px;filter:alpha(opacity:0);opacity: 0;
+		}
+		#small{
+			
+		}
+
+		#layer{
+			width:50px;height: 50px;position:absolute;top:3px;left:3px;background: white;filter:alpha(opacity:50);opacity: 0.5;display: none;
+		}
+
+		#bigPic{
+			
+			width:300px;height: 350px;background: red;border:2px solid black;position: relative;float:left;overflow: hidden;position: relative;display: none;
+		
+		}
+
+
+		#big{position: absolute;top:0px;left:0px;width:700px;height: 489px;}
