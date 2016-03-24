@@ -1,0 +1,64 @@
+#canvas,#canvas_dot,#canvas_ECG{
+	border:1px solid #abc;
+	display: block;
+	margin:20px auto;
+	border-radius: 4px;
+	-moz-box-shadow:0 0 10px rgba(157, 157, 157, .5);/*firefox*/  
+    -webkit-box-shadow:0 0 10px rgba(157, 157, 157, .5);/*webkit*/  
+	box-shadow:0 0 10px rgba(157, 157, 157, .5);
+
+}
+.btn-upload{
+	display: inline-block;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	color:#fff;
+	background-color: #337AB7;
+	border-radius: 5px;
+	width:80px;
+	height:30px;
+	text-align:center;
+	line-height: 30px;
+	font-weight: bold;
+	margin:0 auto;
+	/*position: relative;*/
+}
+.file{
+	position: absolute;
+	top:2px; left:50%;
+	width:80px;
+	height:30px;
+	cursor: pointer;
+	filter:alpha(opacity=0);
+	opacity: 0;
+}
+.upload-label{
+	position: relative;
+
+}
+.file-name{
+	color:#abc;
+}
+#file-name{
+	display: block;
+}
+.control{
+	padding:2px;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	border:2px solid #555;
+	border-radius: 2px;
+	cursor: pointer;
+
+}
+ul{
+	margin-top:10px;
+}
+.btn{
+	border:1px solid #555;
+	
+}
+.selected{
+	background-color: #555;
+	color:#fff;
+}

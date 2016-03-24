@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>image processing</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="Css/imageCss.css">
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class=" center-block " id="content">
+				<h3 class="text-center">Image processing</h3>
+				<div class="form-group text-center upload-label">
+					<label for="operation" class="control-label">Select file:</label>
+					<span class="btn-upload ">上传文件</span>
+					
+					<input type="file" id="uploadedFile" class="file">
+					<span id="file-name"></span>
+					
+					<ul class="list-inline list">
+						<li class="btn selected" id="white" data-type="bAndw">黑白</li>
+						<li class="btn" id="gray" data-type="grayPic">灰度</li>
+						<li class="btn" id="retro" data-type="retroPic">模糊</li>
+					</ul>
+
+					
+					
+				</div>				
+			</div>		
+		</div>
+		
+		<div class=" imageShow">
+			<canvas id="canvas" width='800' height="350"></canvas>
+			<canvas id="render" width='800' height="350"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="Js/imageJs.js"></script>
+</body>
+</html>
