@@ -46,7 +46,22 @@ function getByClass(oParent,name){
 				return getComputedStyle(obj,false)[attr];
 			}
 		}
+
+		//监听事件
+		function addEvent(target,type,handler){
+			if(target.addEventListener){
+				target.addEventListener(type,handler,false);
+			}else if(target.attachEvent){
+				target.attachEvent("on"+type,handler);
+			}else{
+				target["on"+type]=handler;
+			}
+		}
+
 	window.onload=function(){
+
+		
+
 		var listbtn=document.getElementById("list");
 		 maskLayer=getByClass(document,"maskLayer")[0],
 		 oUl=document.getElementById("ul-list"),
@@ -84,7 +99,7 @@ function getByClass(oParent,name){
 		 location();
 
 		 //窗口大小改变时
-		 window.onresize=function(){ console.log("resize")
+		 window.onresize=function(){ 
 		 	location();
 		 }
 
@@ -185,4 +200,34 @@ function getByClass(oParent,name){
 			showOrhide(pageNo);
 
 		}
+
+		//鼠标滚轮事件
+		var wheels=[];
+		var onMouseWheel=function(e){ console.log("into")
+			var e=e||event;
+			var wheelDelta=e.wheelDelta/120;
+			wheels.push(wheelDelta);
+			//解决一次滚动触发两次
+			if(wheels.length>=2){
+				//做行动
+				pageNo+=wheelDelta;
+				if(pageNo>4){
+					pageNo=pageNo%4;
+				}else if(pageNo<1){
+					pageNo=4-Math.abs(pageNo)%4;
+				}
+				console.log("wheelDelta:"+wheelDelta+",pageNo:"+pageNo);
+				showOrhide(pageNo);
+				//把数组置空
+				wheels=[];
+			}
+
+
+		}
+		if(window.addEventListener){
+			
+			document.body.addEventListener("DOMMouseScroll",onMouseWheel,false);  
+		}
+		window.onmousewheel=document.onmousewheel=onMouseWheel;
+
 	}
