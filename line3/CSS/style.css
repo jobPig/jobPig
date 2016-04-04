@@ -1,0 +1,103 @@
+		*{
+			margin:0;padding:0;
+		}
+		html,body{
+			width:100%;
+			height:100%;
+		}
+		.whole{
+			width:100%;
+			height:100%;
+			background:url(../images/bg10.jpg) ;
+			background-size: 100% 100%;
+			position: relative;
+			overflow: hidden;
+		}
+		.gamePanel{
+			width:600px;
+			height:500px;
+			position: absolute;
+			top:50%;
+			left:50%;
+			margin-top:-250px;
+			margin-left:-300px;
+
+			background-color: rgba(255,255,255,.5);
+			background-color: #fff
+			filter:alpha(opacity:.5);
+			opacity: 50;
+			-webkit-border-radius: 10px;
+			-moz-border-radius: 10px;
+			-ms-border-radius: 10px;
+			border-radius: 10px;
+			-webkit-box-shadow:0 0 10px rgba(17,15,15,.5);
+			-moz-box-shadow:0 0 10px rgba(17,15,15,.5);
+			box-shadow:0 0 10px rgba(17,15,15,.5);
+		}
+		.pieces{
+			width:540px;
+			height:440px;
+			margin:30px;
+			border:1px solid #999999;
+			
+		}
+
+		.content{
+			width:480px;
+			height:360px;
+			margin:30px;
+			position: relative;
+		}
+		.content .piece{
+			display: block;
+			width:10%;
+			height:10%;
+			position: absolute;
+			cursor: pointer;
+			/*float:left;*/
+
+			
+
+		}
+		.content .piece img{
+			width:95%;height: 95%;
+			border:1px solid #32AAE0;
+			border-radius:8px;
+		}
+
+		.content .piece:hover{
+			opacity:0.5;
+			filter:alpha(opacity:50);
+		}
+		
+		.content .piece img:hover{
+			border:1px solid red;
+		}
+
+		.selected{
+			background-color: #5092D2;
+			border:1px solid #32E0DE;
+		}
+
+		 .back{
+			width:10%;
+			height:16%;
+			margin-left:90px;
+			margin-top:-20px;
+			/*background-color: yellow;*/
+			background:url(../images/wood2.png) center center;
+			background-size: 100% 100%;
+			position: relative;
+			z-index:10;
+		}
+		.beBack{
+			display: block;
+			font-size:1.5em;
+			font-weight: bold;
+			letter-spacing: 2px;
+			color:#fff;
+			position: absolute;
+			top:58%;
+			left:30%;
+			cursor: pointer;
+		}

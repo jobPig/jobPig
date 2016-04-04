@@ -1,0 +1,254 @@
+.pass-panel,.start-play,.ranking{
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		.start-play{
+			background: url(../images/bgStart.png);
+			background-size: 100% 100%;
+		}
+		.start-play .game-panel{
+			width:400px;
+			height:250px;
+			color:#fff;
+			position: absolute;
+			left:50%;
+			margin-left: -200px;
+			bottom:20%;
+
+			
+		}
+		.btn{
+			display: block;
+			margin:10px auto;
+			width:200px;
+			height:40px;
+			-webkit-border-radius: 10px;
+			-moz-border-radius: 10px;
+			-ms-border-radius: 10px;
+			border-radius: 10px;
+			-webkit-box-shadow:0 0 10px rgba(17,15,15,.5);
+			-moz-box-shadow:0 0 10px rgba(17,15,15,.5);
+			box-shadow:0 0 10px rgba(17,15,15,.5);
+			font-size:1.4em;
+			text-align:center;
+			line-height: 40px;
+			cursor: pointer;
+		}
+		.btn:hover{
+			background:url(../images/start-icon2.png) no-repeat center center #202632;
+		}
+		.game-start{
+			background: url(../images/start-icon2.png) no-repeat center center;
+		}
+		.game-description{
+			background: url(../images/start-icon3.png) no-repeat center center;
+		}
+		.game-recode{
+			background: url(../images/rank.png) no-repeat center center;
+		}
+		ul{
+			list-style: none;
+			width: 100%;
+			height: 100%;
+		}
+		.level-list{
+			
+			
+
+			/*background: yellow;*/
+		}
+		.level-list>li{
+			float:left;
+			width:25%;
+			height:35%;
+			/*background: red;*/
+			/*border:1px solid #000;*/
+			margin:20px;
+			position: relative;
+		}
+		.level-list .level{
+			display: block;
+			width:100%;
+			height:90%;
+			-webkit-border-radius: 10px;
+			-moz-border-radius: 10px;
+			-ms-border-radius: 10px;
+			border-radius: 10px;
+			-webkit-box-shadow:0 0 10px rgba(17,15,15,.5);
+			-moz-box-shadow:0 0 10px rgba(17,15,15,.5);
+			box-shadow:0 0 10px rgba(17,15,15,.5);
+			background:url(../images/1.png) no-repeat center center ; 
+			background-size: 100% 100%;
+			cursor: pointer;
+		}
+		.maskLayer{
+			display: block;
+			width:100%;
+			height: 90%;
+			background-color: rgba(0,0,0,.6);
+			position: absolute;
+			top:0;
+			left:0;
+			z-index:999;
+
+			-webkit-border-radius: 10px;
+			-moz-border-radius: 10px;
+			-ms-border-radius: 10px;
+			border-radius: 10px;
+			-webkit-box-shadow:0 0 10px rgba(17,15,15,.5);
+			-moz-box-shadow:0 0 10px rgba(17,15,15,.5);
+			box-shadow:0 0 10px rgba(17,15,15,.5);
+
+		}
+		
+		.pass-panel .star{
+			width:100%;
+			height:20px;
+		}
+		.pass-panel .small-star{
+			float:left;
+			background: url(../images/star.png) center center;
+			background-size: 100% 100%;
+			width:20%;
+			height: 25px;
+			margin:10px 8px;
+		}
+		.pass-panel .starfull{
+			background: url(../images/starfull.png) center center;
+			background-size: 100% 100%;
+		}
+		.pass-panel .checkPoint{
+			display: block;
+			float:right;
+			width:150px;
+			height:50px;
+			line-height: 50px;
+			font-weight: bold;
+			color:#fff;
+			background: url(../images/wood.jpg) ;
+			background-size: 100% 100%;
+			margin-top:20px;
+			text-align: center;
+			border-top-left-radius: 6px;
+			border-bottom-left-radius: 6px;
+			letter-spacing: 16px;
+		}
+		
+		
+		
+		.pass-panel,.main-panel{
+			display: none;
+		}
+
+		/*rank panel*/
+		.ranking{
+			position: relative;
+			background-color: #abc;
+			display: none;
+		}
+		.rankPanel{
+			position: absolute;
+			width:702px;
+			height:580px;
+			background-color: #F3F0F0;
+			-webkit-border-radius: 10px;
+			-moz-border-radius: 10px;
+			-ms-border-radius: 10px;
+			border-radius: 10px;
+			-webkit-box-shadow:0 0 10px rgba(17,15,15,.5);
+			-moz-box-shadow:0 0 10px rgba(17,15,15,.5);
+			box-shadow:0 0 10px rgba(17,15,15,.5);
+			left:50%;
+			margin-left:-300px;
+			top:50%;
+			margin-top:-250px;
+		}
+		.rankPanel .rankshow{
+			width:190px;
+			height:264px;
+			background-color: #bad6d7;
+			text-align: center;
+			-webkit-border-radius: 10px;
+			-moz-border-radius: 10px;
+			-ms-border-radius: 10px;
+			border-radius: 10px;
+			border:2px solid #000;
+			float:left;
+			margin:10px 20px;
+			cursor: pointer;
+			position: relative;
+		}
+		.rankPanel .rankshow:hover{
+			border:2px solid #fff;
+		}
+		.rankPanel .rankblock{
+			width:80%;
+			height:40px;
+			
+			font-weight: bold;
+			margin: 10px auto;
+			background-color:rgba(0,0,0,.6);
+			background-color: #000;
+			filter:alpha(opacity:.6);
+			opacity: 60;
+			color:#fff; 
+			-webkit-border-radius: 10px;
+			-moz-border-radius: 10px;
+			-ms-border-radius: 10px;
+
+
+		}
+		.rankblock span{
+			display: block;
+			height: 20px;
+			line-height: 20px;
+		}
+		.rankPanel .guanQia{
+			margin-top:18px;
+		}
+		.ranking .pic{
+			display: block;
+			width:88%;
+			height:94px;
+		}
+		.ranking .rank1 .pic{
+			background:url(../images/rank1.png);
+			background-size: 100% 100%;
+		}
+		.ranking .rank2 .pic{
+			background:url(../images/rank2.png);
+			background-size: 100% 100%;
+		}
+		.ranking .rank3 .pic{
+			background:url(../images/rank3.png);
+			background-size: 100% 100%;
+		}
+		.ranking .rank4 .pic{
+			background:url(../images/rank4.png);
+			background-size: 100% 100%;
+		}
+		.ranking .rank5 .pic{
+			background:url(../images/rank5.png);
+			background-size: 100% 100%;
+		}
+		.ranking .rank6 .pic{
+			background:url(../images/rank6.png);
+			background-size: 100% 100%;
+		}
+		.ranking .rankmask{
+			width:100%;
+			height: 100%;
+			background-color: rgba(0,0,0,.5);
+			position: absolute;
+			top:0;
+			left:0;
+		}
+		.ranking .wordstart{
+			display: block;
+			width:150px;
+			height: 150px;
+			background:url(../images/wordstart.png) center center;
+			background-size: 100% 100%;
+			margin:40px 16px;
+		}

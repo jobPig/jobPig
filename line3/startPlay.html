@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>line-line main page</title>
+	<link rel="icon" href="images/bird.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="images/bird.ico" type="image/x-icon" />
+	<link rel="stylesheet" type="text/css" href="CSS/style.css">
+	<link rel="stylesheet" type="text/css" href="CSS/startPlay.css">
+</head>
+<body>
+	<div class="main-panel whole" id="mainPage">
+			<!-- 结果panel start-->
+			<div class="resultPanel">
+				<span id="result_pos" class="pos"></span>
+				<span id="level_pos" class="pos">
+					<em class=" level_three"></em>
+					<em class="dot_three"></em>
+					<em class="num_pos" id="resultLevel"></em>
+				</span>
+				<span id="score_pos" class="pos">
+					<em class="score_pos"></em>
+					<em class="dot_three"></em>
+					<em id="thousand_result" class="num_pos"></em>
+					<em id="hundred_result" class="num_pos"></em>
+					<em id="ten_result" class="num_pos"></em>
+					<em id="unit_result" class="num_pos"></em>
+				</span>
+				<span id="time_pos" class="pos">
+					<em class="time_pos"></em>
+					<em class="dot_three"></em>
+					<em id="time_min" class="num_pos"></em>
+					<em id="time_divide" class="num_pos"></em>
+					<em id="time_sec1" class="num_pos"></em>
+					<em id="time_sec2" class="num_pos"></em>
+
+				</span>
+			</div>
+			<!-- 结果panel end-->
+			<!-- 返回panel start -->
+			<div class="back">
+				<span id="back-btn2" class="beBack">Back</span>
+			</div>
+			<!-- 返回panel end -->
+
+			<!-- 询问离开界面 start-->
+			<div class="askPanel">
+				<span id="ask-word">leave??</span>
+				<span id="yes" class="ask_btn">YES</span> <span id="no" class="ask_btn">NO</span>
+			</div>
+			<!-- 询问离开界面 end-->
+
+			<div class="gamePanel">
+				<div class="pieces">
+					<div class="content" id='gameCanvas'>
+						
+					</div>
+				</div>
+			</div>
+			<div class="count-panel">
+				<span class="level"></span>
+				<span class="level-show">
+					<em id="now-level"></em><em class="divide"></em><em class="total-score"></em>
+				</span>
+				<span class="score-show">
+					<em id="thousand"></em><em id="hundred"></em>
+					<em id="ten"></em><em id="unit"></em>
+				</span>
+			</div>
+
+			<!-- 时间计时 -->
+			<canvas id="canvas" width="100" height="100">
+				Your browser does not support canvas
+			</canvas>
+		</div>
+
+		<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.js"></script>
+		<script src="JS/tidy2.js"></script>
+		
+</body>
+</html>

@@ -1,0 +1,215 @@
+.main-panel .count-panel{
+			width:150px;
+			height: 100px;
+			position: absolute;
+			bottom: 0;
+			left:5%;
+		}
+		.count-panel .level{
+			display: inline-block;
+			width:52px;
+			height:30px;
+			background:url(../images/level.png) center center;
+			background-size: 100% 100%;
+		}
+		.count-panel .level-show{
+			display: inline-block;
+			width:90px;
+			height:30px;
+		}
+		.count-panel .total-score,.count-panel .divide,#now-level,#thousand,#hundred,#ten,#unit{
+			display: inline-block;
+			width:30px;
+			height:30px;
+		}
+		.count-panel .divide{
+			background: url(../images/divide.png) no-repeat;
+			background-size: 100% 100%;
+		}
+		.count-panel .total-score{
+			background: url(../images/number6.png) no-repeat;
+			background-size: 100% 100%;
+		}
+		#now-level{
+			/*background: url(images/number1.png);*/
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+		}
+		.count-panel .score-show{
+			display: block;
+			width:100%;
+			height:30px;
+			
+		}
+		#thousand{
+			background: url(../images/number0.png);
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+		}
+		#hundred{
+			background: url(../images/number0.png);
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+		}
+		#unit{
+			background: url(../images/number0.png);
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+		}
+		#ten{
+			background: url(../images/number0.png);
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+		}
+		#canvas{
+			display: block;
+			/*border:1px solid #cda;*/
+			/*background-color: blue;*/
+			position: absolute;
+			right:5%;
+			bottom:5%;
+		}
+		.main-panel .resultPanel{
+			width:710px;
+			height:610px;
+			position: absolute;
+			left:50%;
+			margin-left: -350px;
+			background:url(../images/panel.png) center center;
+			background-size: 100% 100%;
+			z-index:999;
+			display: none;
+		}
+		.resultPanel .pos{
+			display: block;
+			text-align:center;
+			
+		}
+		#result_pos{
+			margin:0 auto;
+			width:160px;
+			height:40px;
+			background: url(../images/gamepic/gsuccess.png) center center;
+			background-size: 100% 100%;
+			margin-top:120px;
+		}
+		#level_pos,#time_pos,#score_pos{
+			margin:0 auto;
+			width:200px;
+			height:40px;
+			margin-top:48px;
+		}
+		.resultPanel .level_three,.resultPanel .score_pos,.resultPanel .time_pos{
+			display: inline-block;
+			width:56px;
+			height:40px;
+		}
+		.resultPanel .level_three{
+			background: url(../images/gamepic/glevel.png) center center;
+			background-size: 100% 100%;
+		}
+
+		.resultPanel .dot_three{
+			display: inline-block;
+			width:16px;
+			height:32px;
+			background: url(../images/gamepic/gdot.png) center center;
+			background-size: 100% 100%;
+		}
+		.resultPanel .num_pos{
+			display: inline-block;
+			width:16px;
+			height:32px;
+		}
+		#resultLevel{
+			background: url(../images/gamepic/gnum2.png) center center;
+			background-size: 100% 100%;
+		}
+		.resultPanel .score_pos{
+			background: url(../images/gamepic/gscore.png) center center;
+			background-size: 100% 100%;
+		}
+		#thousand_result{
+			background: url(../images/gamepic/gnum0.png) center center;
+			background-size: 100% 100%;
+		}
+		#hundred_result{
+			background: url(../images/gamepic/gnum2.png) center center;
+			background-size: 100% 100%;
+		}
+		#ten_result{
+			background: url(../images/gamepic/gnum4.png) center center;
+			background-size: 100% 100%;
+		}
+		#unit_result{
+			background: url(../images/gamepic/gnum6.png) center center;
+			background-size: 100% 100%;
+		}
+		.resultPanel .time_pos{
+			background: url(../images/gamepic/gtime.png) center center;
+			background-size: 100% 100%;
+		}
+		.resultPanel #time_min{
+			background: url(../images/gamepic/gnum3.png) center center;
+			background-size: 100% 100%;
+		}
+		.resultPanel #time_sec1{
+			background: url(../images/gamepic/gnum5.png) center center;
+			background-size: 100% 100%;
+		}
+		.resultPanel #time_sec2{
+			background: url(../images/gamepic/gnum6.png) center center;
+			background-size: 100% 100%;
+		}
+		.resultPanel #time_divide{
+			background: url(../images/gamepic/timeDivide.png) center center;
+			background-size: 100% 100%;
+		}
+		.main-panel .askPanel{
+			width:330px;
+			height:366px;
+			position: absolute;
+			top:50%;
+			margin-top:-182px;
+			left:50%;
+			margin-left:-164px;
+			z-index:20;
+			background: url(../images/ask.png) center center;
+			background-size: 100% 100%;
+			display: none;
+		}
+		.main-panel .ask_btn{
+			position: absolute;
+			width:50px;
+			height:24px;
+			-webkit-border-radius: 4px;
+			-moz-border-radius: 4px;
+			-ms-border-radius: 4px;
+			border-radius: 4px;
+			-webkit-box-shadow:0 0 10px rgba(17,15,15,.5);
+			-moz-box-shadow:0 0 10px rgba(17,15,15,.5);
+			box-shadow:0 0 10px rgba(17,15,15,.5);
+			color:#fff;
+			font-weight: bold;
+			text-align: center;
+			line-height: 20px;
+			cursor: pointer;
+		}
+		.main-panel #yes{
+			background-color: #903939;
+			left:30px;
+			bottom:34px;
+		}
+		.main-panel #no{
+			background-color: #1A2C33;
+			left:130px;
+			bottom:37px;
+		}
+		#ask-word{
+			position: absolute;
+			color:#fff;
+			font-size:30px;
+			bottom:72px;
+			left:30px;
+			font-weight: bold;
+		}
