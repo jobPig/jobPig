@@ -124,7 +124,7 @@ console.log(i+":time"+time+",star:"+star)
 						(function(i){
 							$(".level-list>li").eq(i).on("click",function(e){
 							     console.log(i);
-							     window.location.href="/startPlay.html?guanQia="+(i+1);
+							     window.location.href="startPlay.html?guanQia="+(i+1);
 							})
 						})(i)
 
