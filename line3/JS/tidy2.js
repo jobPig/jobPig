@@ -64,15 +64,23 @@ console.log("到时间  失败...");
 					$("#yes").html("YES");
 					$("#no").html("NO");
 					$("#yes").on("click",function(e){
+						var e=e||event;
+						  
 						$(".askPanel").css("display","none");
 						window.location.href="link-link3.html";
+						//阻止冒泡  不然会再次触发document的click事件
+						e.stopPropagation();
+						return false;
 					});
 					$("#no").on("click",function(e){
 
+						var e=e||event;
 						$(".askPanel").css("display","none");
 						// 初始化界面
 						_this.timeDraw.draw();
 						_this.line.init();
+						e.stopPropagation();
+						return false;
 						
 						
 					})
