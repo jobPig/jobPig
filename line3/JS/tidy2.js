@@ -22,7 +22,7 @@ gameMove.prototype={
 
 		var that=this;
 		$("#now-level").css("background-image","url(images/number"+this.guanQia+".png)");
-		$("#back-btn2").on("click",function(e){
+		$("#backbtn").on("click",function(e){
 			//清除计时
 			
 			$(".askPanel").css("display","block");
@@ -38,57 +38,237 @@ gameMove.prototype={
 			})
 			
 		});
+		
+
 		//点击事件
 		this.spanClick();
+		this.bombEvent();
+		this.changeTwo();
+		this.arrangePage();
 		//计时（当超过总时间显示失败页面）
-		var count=0;
-		var countTime=setInterval(function(){
+		
+		this.timeCount();
+		
+
+		
+	},
+	changeTwo:function(){
+		//交换事件
+		var isChange=false;
+		var that=this;
+		var twoInclick=0;   //点击两次
+		$("#exchange").on("click",function(e){  
 			
-			if(count>=that.timeDraw.timeSum*60){
-console.log("到时间  失败...");		
-				$(".resultPanel").css("display","block");
-				var endDate=new Date().getTime();
-				var timeDiffer=endDate-this.startDate;
+			isChange=true;
+			var isComplete=false;
+			var e=e||event;
+			//消除上次选中效果
+			$(that.preCheck).removeClass("selected");
+			that.preCheck=null;
+			var count=parseInt($(".changecount").html());
+			count--;
+			if(count<0){
+				return;
+			}else{
+				
+				var firstClick=null;
+				var secondClick=null;
+				 var _that=that;
+					$(".piece").on("click",function(e){  
+						if(!isChange&&isComplete){
+							return;
+						}
 
-				that.successOrfail(false,that.guanQia,that.SCORE,that.timeDraw.timeSum*60*1000);
-				clearInterval(countTime);
-				count=0;
-				// that.timeDraw.stop();
+						if(!firstClick&&!secondClick){
+							firstClick=$(this)[0];
+						}else if(firstClick&&!secondClick){
+							secondClick=$(this)[0];
+						
+							//已经点击两次
+							isComplete=true;
+							isChange=false;
+							//交换
+							console.log("exchange complete:"+firstClick.src+","+secondClick.src);
+				         _that.aChangeB(firstClick,secondClick);
+							
+							$(".changecount").html(count);		
+							
+						
+						e.stopPropagation();
+						e.returnValue=false;
+						if(count==0){
+							$("#exchange").addClass("unfocus");
+						}
+						
+					}
+			})
+			
+		}
+	})
+	},
+	aChangeB:function(a,b){  console.log(this.line.iconDiv[a.row][a.col].src,this.line.iconDiv[b.row][b.col].src)
+		//两对象交换
+		//页面交换
+		var mid=a.src;
+		a.src=b.src;
+		b.src=mid;
+		$(a).find("img").attr("src",'images/'+a.src+'.png');
+		$(b).find("img").attr("src",'images/'+b.src+'.png');
+		//数组中数据交换
+		this.line.iconArr[(a.row-1)*this.line.gameCol+a.col-1]=a.src;
+		this.line.iconArr[(b.row-1)*this.line.gameCol+b.col-1]=b.src;
+		this.line.iconDiv[a.row][a.col].src=a.src;
+		this.line.iconDiv[b.row][b.col].src=b.src;
+		console.log(this.line.iconDiv[a.row][a.col].src,this.line.iconDiv[b.row][b.col].src)
+	},
+	arrangePage:function(){
+		//整个界面重新排序
+		var that=this;
+		var count=0;
+		$("#arrange").on("click",function(e){
+			count=parseInt($(".arrangecount").html());
+			count--;
+			if(count<0){
+				return;
+			}else{
+				$(".arrangecount").html(count);
+				var nowDate=that.line.iconArr;		
+				var newDate=that.line.shuffle(nowDate);		
+				var i=0;
 				var _that=that;
-				//点击 消失
-				$(document).on("click",function(e){
-					var _this=_that;
-					$(".resultPanel").css("display","none");
-					$(".askPanel").css("display","block");
-					$("#ask-word").html("leave??");
-					$("#yes").html("YES");
-					$("#no").html("NO");
-					$("#yes").on("click",function(e){
-						var e=e||event;
-						  
-						$(".askPanel").css("display","none");
-						window.location.href="link-link3.html";
-						//阻止冒泡  不然会再次触发document的click事件
-						e.stopPropagation();
-						return false;
-					});
-					$("#no").on("click",function(e){
-
-						var e=e||event;
-						$(".askPanel").css("display","none");
-						// 初始化界面
-						_this.timeDraw.draw();
-						_this.line.init();
-						e.stopPropagation();
-						return false;
-						
-						
-					})
+	console.log($(".piece").length)			
+				$(".piece").each(function(){
+					$(this)[0].src=newDate[i];
+					_that.line.iconDiv[$(this)[0].row][$(this)[0].col].src=newDate[i];
 					
+					if(newDate[i]=="-1"){
+						$(this).css("display","none");
+					}else{
+						$(this).css("display","block");
+						$(this).removeClass("selected");
+						$(this).find("img").attr("src",'images/'+newDate[i]+'.png');
+					}
+					i++;
 				})
+				if(count==0){
+					$("#arrange").addClass("unfocus");
+				}
 			}
-			count++;
-		},1000);
+			
+		})
+			
+
+
+	},
+	timeCount:function(){
+		//页面计时  超过总时间显示失败界面
+		var that=this;
+
+		var timeStartCount=function(){
+			var _that=that;
+			var timing=setInterval(function(){
+				if(_that.timeDraw.isTimeOver){
+					_that.timeDraw.isTimeOver=false;
+		console.log("到时间  失败...");	
+					// 失败音效
+					if($("#failMusic")[0].paused){
+						$("#failMusic")[0].play();
+					}
+					$(".resultPanel").css("display","block");
+					_that.successOrfail(false,_that.guanQia,_that.SCORE,_that.timeDraw.timeSum*60*1000);
+					var _now=_that;
+					//点击 消失
+					$(".resultPanel").on("click",function(e){
+						var _this=_now;
+						$(".resultPanel").css("display","none");
+						$(".askPanel").css("display","block");
+						$("#ask-word").html("leave??");
+						$("#yes").html("YES");
+						$("#no").html("NO");
+						$("#yes").on("click",function(e){ 
+							var e=e||event;
+							  
+							$(".askPanel").css("display","none");
+							// window.location.href="link-link3.html";
+							//阻止冒泡  不然会再次触发document的click事件
+							e.stopPropagation();
+							return false;
+						});
+						$("#no").on("click",function(e){
+							var e=e||event;
+							$(".askPanel").css("display","none");
+							// 初始化界面
+							
+							
+							_this.timeDraw.draw();
+							_this.line.init();
+							_this.initDetail();
+							_this.spanClick();
+							timeStartCount();
+							e.stopPropagation();
+							e.returnValue=false;
+							
+						});
+						
+					});
+					clearInterval(timing);
+				}
+			},1000)
+		}
+		timeStartCount();
+
+		
+	},
+	bombEvent:function(){
+		//点击炸弹消除所有与该目标相同的
+		var isstartBomb=false;
+		var isUsed=false;
+		var that=this;
+		var isPieceClick=false;
+		var isfirstbomb=false;
+		var count=0;
+		var inbombCount=0;
+		$("#bomb").on("click",function(e){console.log("inbombCount:"+inbombCount)
+			//消除上次选中效果
+			if(inbombCount!=0){
+				inbombCount=0;
+				return;
+			}
+			$(that.preCheck).removeClass("selected");
+			that.preCheck=null;
+			inbombCount++;
+
+			if(count<0){
+				return;
+			}else{
+				
+				isstartBomb=true;
+				$(".piece").on("click",function(e){
+					count=parseInt($(".bombcount").html());
+					count--;
+					isPieceClick=true;
+					if(isUsed&&!isstartBomb){
+						return;
+					}
+					var src=$(this)[0].src;
+					that.bombClear(src);
+					e.stopPropagation();
+					e.returnValue=false;
+					isUsed=true;
+					isstartBomb=false;
+					$(".bombcount").html(count);
+
+					inbombCount--;
+
+					if(count==0){
+						$("#bomb").addClass("unfocus");
+					}
+				})
+				
+			}
+console.log("isPieceClick:"+isPieceClick);			
+			
+		})
 	},
 	parseHref:function(href){
     	var arr=href.split("?")[1];
@@ -107,7 +287,11 @@ console.log("到时间  失败...");
     spanClick:function(){
     	var spans=$(".piece");
     	var that=this;
+    	var clickMusic=$("#clickMusic")[0];
     	spans.on("click",function(e){
+    			// 点击音
+    			clickMusic.pause();
+    			clickMusic.play();
 				var target=e.target.parentNode;
 				var row=target.row;      //点击目标的行
 				var col=target.col;      //点击目标的列
@@ -128,7 +312,8 @@ console.log(that.line.iconDiv)
 							if(that.hasPath(that.line.iconDiv,target,that.preCheck)){
 								//如果图片可以抵消
 								//两图片可以抵消							
-								
+								that.line.iconArr[(row-1)*that.line.gameCol+col-1]=-1;
+								that.line.iconArr[(that.preCheck.row-1)*that.line.gameCol+that.preCheck.col-1]=-1;
 								that.line.iconDiv[row][col].src=-1;
 								that.line.iconDiv[that.preCheck.row][that.preCheck.col].src=-1;	
 								$(target).css("display","none");
@@ -213,6 +398,11 @@ console.log(that.line.iconDiv)
 				var result=this.format(this.SCORE,4);
 console.log('可以联通,score:'+result);
 				this.dataToPic(result);
+
+				//timi音效
+					$("#timiMusic")[0].pause();
+					$("#timiMusic")[0].play();
+
 				//判断是否已经成功(即总分为10*10*10)
 				if(this.SCORE>=1000){
 					//成功  结果页面显示
@@ -242,7 +432,7 @@ console.log("记录recode更新:"+localStorage.getItem("guanQia"));
 
 					//点击 消失
 					var _that=this;
-					$(document).on("click",function(e){
+					$(".resultPanel").on("click",function(e){
 						$(".resultPanel").css("display","none");
 						$(".askPanel").css("display","block");
 						$("#ask-word").html("leave or move on??");
@@ -463,6 +653,31 @@ console.log("记录recode更新:"+localStorage.getItem("guanQia"));
 		$("#time_sec2").css("background-image","url(images/gamepic/gnum"+sec%10+".png)");
 		//停止时间运动
 		this.timeDraw.stop();
+	},
+	//点击炸弹后获得下一个点击目标，把所有与目标相同的src消除
+	bombClear:function(src){
+		var that=this;
+		$(".piece").each(function(){
+			if($(this)[0].src==src){
+				//隐藏该span
+				$(this).css("display","none");
+				//对应位置数据为-1
+				that.line.iconArr[($(this)[0].row-1)*that.line.gameCol+$(this)[0].col-1]=-1;
+				that.line.iconDiv[$(this)[0].row][$(this)[0].col].src=-1;
+				that.SCORE+=10;
+				var result=that.format(that.SCORE,4);
+				that.dataToPic(result);			
+			}
+		})
+	},
+	initDetail:function(){
+		// 初始化侧边栏以及分数
+		$(".bombcount").html("2");
+		$("#bomb").removeClass("unfocus");
+		$(".changecount").html("2");
+		$("#exchange").removeClass("unfocus");
+		var result=this.format(0,4);
+		this.dataToPic(result);	
 	}
 }
 
@@ -473,6 +688,7 @@ var lineToLine=function(){
 			this.gameCol=10;
 			this.iconArr=[];     //存放图片的列表
 			this.iconDiv=[];    //存放图片div的列表 格式[{x: 0,y:0 ,src:iconArr[0]},{},{}...]
+			this.iconDivSrc=[];
 			this.woodWidth=50;
 			this.picSum=10;      //可被分配的图片数量
 
@@ -549,12 +765,15 @@ lineToLine.prototype={
 				pic.src='images/'+this.iconDiv[i][j].src+'.png';
 				oDiv.row=i;
 				oDiv.col=j;
+				oDiv.src=this.iconDiv[i][j].src;
 				oDiv.style.left=(j-1)*48+"px";
 				oDiv.style.top=(i-1)*36+"px";
 				oDiv.appendChild(pic);
 				gameCanvas.appendChild(oDiv);
 			}
 		}
+		
+
 	},
 	clearGame:function(){console.log("clear game;")
 		//清除界面
@@ -582,6 +801,7 @@ var timeDraw=function(){
 	};
 	this.timer=null;
 	this.timeSum=5;    //整个游戏总时间
+	this.isTimeOver=false;
 
 }
 timeDraw.prototype={
@@ -630,7 +850,7 @@ timeDraw.prototype={
 				// clearInterval(that.timer);
 				//计时 五分钟结束后出现结果页面(失败)
 				// $(".resultPanel").css("display","block");
-				
+				that.isTimeOver=true;
 			}
 			that.animation(that.percent);
 			that.percent+=1/(that.timeSum*60);
@@ -647,6 +867,10 @@ timeDraw.prototype={
 
 	var gameMove=new gameMove();
 	gameMove.init();
+	// 背景音效开始
+	if($("#bgMusic").paused){
+		$("#bgMusic").play();
+	}
 
 	
 })
