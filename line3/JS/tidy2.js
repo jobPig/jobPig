@@ -1,4 +1,5 @@
 $(function(){
+	//分数设置：0个拐点30分，1个拐点20分，2个拐点10分,由炸弹炸毁的每个3分，交换ab位置扣2分，交换所有位置扣10分
 var gameMove=function(){
 	this.SCORE=0;
 	this.preCheck=null;      ////前一个点击的位置
@@ -8,6 +9,7 @@ var gameMove=function(){
 	this.startDate=new Date().getTime();      //开始时时间
 	this.guanQia=1;
 	this.timeDraw=new timeDraw();    //倒计时
+	this.existSpan=this.ROW*this.COL;
 }
 
 gameMove.prototype={
@@ -24,16 +26,16 @@ gameMove.prototype={
 		$("#now-level").css("background-image","url(images/number"+this.guanQia+".png)");
 		$("#backbtn").on("click",function(e){
 			//清除计时
-			
+			that.timeDraw.stop(that.timeDraw.percent);
 			$(".askPanel").css("display","block");
 			$("#yes").on("click",function(e){
 				$(".askPanel").css("display","none");
 				window.location.href="link-link3.html";
-				that.timeDraw.stop();
+				
 			});
 			$("#no").on("click",function(e){
 				$(".askPanel").css("display","none");
-				
+				that.timeDraw.draw();
 				
 			})
 			
@@ -119,6 +121,8 @@ gameMove.prototype={
 		this.line.iconArr[(b.row-1)*this.line.gameCol+b.col-1]=b.src;
 		this.line.iconDiv[a.row][a.col].src=a.src;
 		this.line.iconDiv[b.row][b.col].src=b.src;
+
+		this.SCORE-=2;
 		console.log(this.line.iconDiv[a.row][a.col].src,this.line.iconDiv[b.row][b.col].src)
 	},
 	arrangePage:function(){
@@ -126,6 +130,7 @@ gameMove.prototype={
 		var that=this;
 		var count=0;
 		$("#arrange").on("click",function(e){
+			that.SCORE-=10;
 			count=parseInt($(".arrangecount").html());
 			count--;
 			if(count<0){
@@ -150,6 +155,7 @@ gameMove.prototype={
 					}
 					i++;
 				})
+
 				if(count==0){
 					$("#arrange").addClass("unfocus");
 				}
@@ -167,7 +173,7 @@ gameMove.prototype={
 		var timeStartCount=function(){
 			var _that=that;
 			var timing=setInterval(function(){
-				if(_that.timeDraw.isTimeOver){
+				if(_that.timeDraw.isTimeOver){  _that.timeDraw.stop(0);
 					_that.timeDraw.isTimeOver=false;
 		console.log("到时间  失败...");	
 					// 失败音效
@@ -189,7 +195,7 @@ gameMove.prototype={
 							var e=e||event;
 							  
 							$(".askPanel").css("display","none");
-							// window.location.href="link-link3.html";
+							window.location.href="link-link3.html";
 							//阻止冒泡  不然会再次触发document的click事件
 							e.stopPropagation();
 							return false;
@@ -252,6 +258,7 @@ gameMove.prototype={
 					}
 					var src=$(this)[0].src;
 					that.bombClear(src);
+					that.preCheck=null;
 					e.stopPropagation();
 					e.returnValue=false;
 					isUsed=true;
@@ -308,8 +315,9 @@ $(target).addClass("selected");
 						if(src==that.line.iconDiv[that.preCheck.row][that.preCheck.col].src){
 							//图片一致
 							console.log("same picture:"+src);
-console.log(that.line.iconDiv)							
-							if(that.hasPath(that.line.iconDiv,target,that.preCheck)){
+console.log(that.line.iconDiv)	
+							var pathCount=that.hasPath(that.line.iconDiv,target,that.preCheck);						
+							if(pathCount>-1){
 								//如果图片可以抵消
 								//两图片可以抵消							
 								that.line.iconArr[(row-1)*that.line.gameCol+col-1]=-1;
@@ -318,8 +326,71 @@ console.log(that.line.iconDiv)
 								that.line.iconDiv[that.preCheck.row][that.preCheck.col].src=-1;	
 								$(target).css("display","none");
 								$(that.preCheck).css("display","none");
+								target.src=-1;
+								that.preCheck.src=-1;
 								that.preCheck=null;	
-								
+
+								that.existSpan-=2;
+console.log("click existSpan:"+that.existSpan);								
+								that.SCORE+=(3-pathCount)*10;
+								//分数同步到界面
+								var result=that.format(that.SCORE,4);
+				console.log('可以联通,score:'+result);
+								that.dataToPic(result);
+
+								//timi音效
+									$("#timiMusic")[0].pause();
+									$("#timiMusic")[0].play();
+
+								//判断是否已经成功(即existspan为0)
+								if(that.existSpan<=0){
+									//成功  结果页面显示
+									var endDate=new Date().getTime();
+									var timeDiffer=endDate-that.startDate;
+				console.log("时间差："+timeDiffer);	
+									that.successOrfail(true,that.guanQia,that.SCORE,timeDiffer);
+									//把记录存入localstorage
+									var recode=localStorage.getItem("guanQia");
+				console.log("记录:"+recode);		
+									recode=JSON.parse(recode);				
+									if(recode[that.guanQia]){
+										//存在该关卡记录(若最小时间大于此次记录事件 则换)
+										if(recode[that.guanQia].time>(timeDiffer/1000)/60){
+											recode[that.guanQia].time=((timeDiffer/1000)/60).toFixed(2);
+										}
+									}else{
+										recode[that.guanQia]={
+											passlevel:that.guanQia,
+											maxRecode:that.SCORE,
+											time:((timeDiffer/1000)/60).toFixed(2)
+										}
+									}
+									recode=JSON.stringify(recode);
+									localStorage.setItem("guanQia",recode);
+				console.log("记录recode更新:"+localStorage.getItem("guanQia"));
+
+									//点击 消失
+									var _that=that;
+									$(".resultPanel").on("click",function(e){
+										$(".resultPanel").css("display","none");
+										$(".askPanel").css("display","block");
+										$("#ask-word").html("leave or move on??");
+										$("#yes").html("leave");
+										$("#no").html("go on");
+										$("#yes").on("click",function(e){
+											$(".askPanel").css("display","none");
+											window.location.href="link-link3.html";
+										});
+										$("#no").on("click",function(e){
+											
+											// 初始化界面
+											window.location.href="startPlay.html?guanQia="+(_that.guanQia+1);
+											
+										})
+										
+									})					
+								}
+								  
 							}else{
 								//两图片不能抵消
 								$(that.preCheck).removeClass("selected");	
@@ -349,13 +420,15 @@ console.log(that.line.iconDiv)
 		return false;
 	},
 	hasPath:function(iconDiv,obj1,obj2){
-				
+			var pathcount=-1;
 			//两张图片相同
 			var path=this.searchPath(iconDiv,obj1.row,obj1.col,obj2.row,obj2.col);
 			//0转弯得到的空路径集合和结果集
 			var road0=path.road;
 			var turn0=path.result; 
-			console.log('1个转弯结果集为：'+turn0.length);
+			pathcount=turn0.length>0?0:-1;
+			console.log('0个转弯结果集为：'+turn0.length,pathcount);
+			
 			//1次拐角的空路径和结果集\
 			var road1=[];
 			var turn1=[];
@@ -365,11 +438,14 @@ console.log(that.line.iconDiv)
 				turn1=turn1.concat(path1.result);
 			}
 			
-
+			if(pathcount==-1&&turn1.length>0){
+				pathcount=1;
+			}
        		//console.log('1个转弯空路径为：'+road1.length);
 			//printArr(road1);
 
-			console.log('1个转弯结果集为：'+turn1.length);
+			console.log('1个转弯结果集为：'+turn1.length,pathcount);
+
 			var newRoad1=this.distinct(road1,road0);  
 			//console.log('去重后1个转弯空路径为：'+newRoad1.length);
 			//printArr(newRoad1);
@@ -382,9 +458,12 @@ console.log(that.line.iconDiv)
 				road2=road2.concat(path2.road);
 				turn2=turn2.concat(path2.result);
 			}
-			console.log('2个转弯空路径为：'+road1.length);
+			// console.log('2个转弯空路径为：'+road1.length);
 			//printArr(road1);
-			console.log('2个转弯结果集为：'+turn2.length);
+			if(pathcount==-1&&turn2.length>0){
+				pathcount=2;
+			}
+			console.log('2个转弯结果集为：'+turn2.length,pathcount);
 			//去重
 			var newRoad2=this.distinct(road2,road0.concat(newRoad1));
 			//console.log('去重后2个转弯空路径为：'+newRoad2.length);
@@ -392,73 +471,17 @@ console.log(that.line.iconDiv)
 
 			//判断是否可以联通
 			console.log('clear:'+obj1.row+'行'+obj1.col+'列,元素为:'+iconDiv[obj1.row][obj1.col].src);
-			if(turn0.length>0||turn1.length>0||turn2.length>0){
-				this.SCORE+=2*10;
-				//分数同步到界面
-				var result=this.format(this.SCORE,4);
-console.log('可以联通,score:'+result);
-				this.dataToPic(result);
-
-				//timi音效
-					$("#timiMusic")[0].pause();
-					$("#timiMusic")[0].play();
-
-				//判断是否已经成功(即总分为10*10*10)
-				if(this.SCORE>=1000){
-					//成功  结果页面显示
-					var endDate=new Date().getTime();
-					var timeDiffer=endDate-this.startDate;
-console.log("时间差："+timeDiffer);	
-					this.successOrfail(true,this.guanQia,this.SCORE,timeDiffer);
-					//把记录存入localstorage
-					var recode=localStorage.getItem("guanQia");
-console.log("记录:"+recode);		
-					recode=JSON.parse(recode);				
-					if(recode[this.guanQia]){
-						//存在该关卡记录(若最小时间大于此次记录事件 则换)
-						if(recode[this.guanQia].time>(timeDiffer/1000)/60){
-							recode[this.guanQia].time=((timeDiffer/1000)/60).toFixed(2);
-						}
-					}else{
-						recode[this.guanQia]={
-							passlevel:this.guanQia,
-							maxRecode:this.SCORE,
-							time:((timeDiffer/1000)/60).toFixed(2)
-						}
-					}
-					recode=JSON.stringify(recode);
-					localStorage.setItem("guanQia",recode);
-console.log("记录recode更新:"+localStorage.getItem("guanQia"));
-
-					//点击 消失
-					var _that=this;
-					$(".resultPanel").on("click",function(e){
-						$(".resultPanel").css("display","none");
-						$(".askPanel").css("display","block");
-						$("#ask-word").html("leave or move on??");
-						$("#yes").html("leave");
-						$("#no").html("go on");
-						$("#yes").on("click",function(e){
-							$(".askPanel").css("display","none");
-							window.location.href="link-link3.html";
-						});
-						$("#no").on("click",function(e){
-							
-							// 初始化界面
-							window.location.href="startPlay.html?guanQia="+(_that.guanQia+1);
-							
-						})
-						
-					})					
-				}
-				//求最短路径
-				//消除（把psrc置为-1）
-// clearObj(iconDiv,obj1,obj2);
-				return true;
-			}else{
-				console.log('不可以联通');
-				return false;
-			}
+// 			if(turn0.length>0||turn1.length>0||turn2.length>0){   
+				 
+// 				//求最短路径
+// 				//消除（把psrc置为-1）
+// // clearObj(iconDiv,obj1,obj2);
+// 				return true;
+// 			}else{
+// 				console.log('不可以联通');
+// 				return false;
+// 			}
+			return pathcount;
 
 		
 	},
@@ -483,7 +506,8 @@ console.log("记录recode更新:"+localStorage.getItem("guanQia"));
 
 		for(i=r1,j=c1-1;j>=0;j--)
 		{
-			if(iconDiv[i][j].src==-1){console.log('向左'+i+'行'+j+'列是-1');
+			if(iconDiv[i][j].src==-1){
+				// console.log('向左'+i+'行'+j+'列是-1');
 				countLeft++;
 				roadZero.push(iconDiv[i][j]);
 			}else{
@@ -495,9 +519,9 @@ console.log("记录recode更新:"+localStorage.getItem("guanQia"));
 					resultobj.step=countLeft;        //步数
 
 					results.push(resultobj);
-					console.log('向左'+i+'行'+j+'列不是-1,是结果'+iconDiv[i][j].src);
+					// console.log('向左'+i+'行'+j+'列不是-1,是结果'+iconDiv[i][j].src);
 				}
-				console.log('向左'+i+'行'+j+'列不是-1,是'+iconDiv[i][j].src);
+				// console.log('向左'+i+'行'+j+'列不是-1,是'+iconDiv[i][j].src);
 				
 				break;
 			}
@@ -505,7 +529,8 @@ console.log("记录recode更新:"+localStorage.getItem("guanQia"));
 		//向右
 		var countRight=0;
 		for(i=r1,j=c1+1;j<this.COL+2;j++){
-			if(iconDiv[i][j].src==-1){console.log('向右'+i+'行'+j+'列是-1');
+			if(iconDiv[i][j].src==-1){
+				// console.log('向右'+i+'行'+j+'列是-1');
 				countRight++;
 				roadZero.push(iconDiv[i][j]);
 			}else{
@@ -518,10 +543,10 @@ console.log("记录recode更新:"+localStorage.getItem("guanQia"));
 					resultobj.step=countRight;        //步数
 
 					results.push(resultobj);
-					console.log('向右'+i+'行'+j+'列不是-1,是结果'+iconDiv[i][j].src);
+					// console.log('向右'+i+'行'+j+'列不是-1,是结果'+iconDiv[i][j].src);
 				}
-				console.log('向右'+i+'行'+j+'列不是-1,是'+iconDiv[i][j].src);
-				console.log('i='+i+',j='+j+',r2='+r2+',c2='+c2+',i==r2&&j==c2是否为真：'+(i==r2&&j==c2));
+				// console.log('向右'+i+'行'+j+'列不是-1,是'+iconDiv[i][j].src);
+				// console.log('i='+i+',j='+j+',r2='+r2+',c2='+c2+',i==r2&&j==c2是否为真：'+(i==r2&&j==c2));
 				break;
 			}
 
@@ -529,7 +554,8 @@ console.log("记录recode更新:"+localStorage.getItem("guanQia"));
 		//向上
 		var countUp=0;
 		for(i=r1-1,j=c1;i>=0;i--){
-			if(iconDiv[i][j].src==-1){console.log('向上'+i+'行'+j+'列是-1');
+			if(iconDiv[i][j].src==-1){
+				// console.log('向上'+i+'行'+j+'列是-1');
 				countUp++;
 				roadZero.push(iconDiv[i][j]);
 			}else{
@@ -541,9 +567,9 @@ console.log("记录recode更新:"+localStorage.getItem("guanQia"));
 					resultobj.step=countUp;        //步数
 
 					results.push(resultobj);
-					console.log('向上'+i+'行'+j+'列不是-1,是结果'+iconDiv[i][j].src);
+					// console.log('向上'+i+'行'+j+'列不是-1,是结果'+iconDiv[i][j].src);
 				}
-				console.log('向上'+i+'行'+j+'列不是-1,是'+iconDiv[i][j].src);
+				// console.log('向上'+i+'行'+j+'列不是-1,是'+iconDiv[i][j].src);
 				break;
 			}
 
@@ -553,7 +579,8 @@ console.log("记录recode更新:"+localStorage.getItem("guanQia"));
 		//向下
 		var countDown=0;
 		for(i=r1+1,j=c1;i<this.ROW+2;i++){
-			if(iconDiv[i][j].src==-1){console.log('向下'+i+'行'+j+'列是-1');
+			if(iconDiv[i][j].src==-1){
+				// console.log('向下'+i+'行'+j+'列是-1');
 				countDown++;
 				roadZero.push(iconDiv[i][j]);
 			}else{
@@ -565,9 +592,9 @@ console.log("记录recode更新:"+localStorage.getItem("guanQia"));
 					resultobj.step=countDown;        //步数
 
 					results.push(resultobj);
-					console.log('向下'+i+'行'+j+'列不是-1,是结果'+iconDiv[i][j].src);
+					// console.log('向下'+i+'行'+j+'列不是-1,是结果'+iconDiv[i][j].src);
 				}
-				console.log('向下'+i+'行'+j+'列不是-1,是'+iconDiv[i][j].src);
+				// console.log('向下'+i+'行'+j+'列不是-1,是'+iconDiv[i][j].src);
 				break;
 			}
 
@@ -652,7 +679,7 @@ console.log("记录recode更新:"+localStorage.getItem("guanQia"));
 		$("#time_sec1").css("background-image","url(images/gamepic/gnum"+parseInt(sec/10)+".png)");
 		$("#time_sec2").css("background-image","url(images/gamepic/gnum"+sec%10+".png)");
 		//停止时间运动
-		this.timeDraw.stop();
+		this.timeDraw.stop(this.timeDraw.percent);
 	},
 	//点击炸弹后获得下一个点击目标，把所有与目标相同的src消除
 	bombClear:function(src){
@@ -662,13 +689,16 @@ console.log("记录recode更新:"+localStorage.getItem("guanQia"));
 				//隐藏该span
 				$(this).css("display","none");
 				//对应位置数据为-1
+				this.src=-1;
 				that.line.iconArr[($(this)[0].row-1)*that.line.gameCol+$(this)[0].col-1]=-1;
 				that.line.iconDiv[$(this)[0].row][$(this)[0].col].src=-1;
-				that.SCORE+=10;
+				that.SCORE+=3;
 				var result=that.format(that.SCORE,4);
-				that.dataToPic(result);			
+				that.dataToPic(result);	
+				that.existSpan--;		
 			}
 		})
+console.log("bombclear existSpan:"+that.existSpan);		
 	},
 	initDetail:function(){
 		// 初始化侧边栏以及分数
@@ -842,11 +872,13 @@ timeDraw.prototype={
 		this.cxt.closePath();
 	},
 	draw:function(){
+		clearInterval(this.timer);
+		this.timer=null;
 		//总时间为5min
 		var that=this;
 		this.timer=setInterval(function(){
 			if(that.percent>=1){
-				that.stop();
+				that.stop(0);
 				// clearInterval(that.timer);
 				//计时 五分钟结束后出现结果页面(失败)
 				// $(".resultPanel").css("display","block");
@@ -856,11 +888,11 @@ timeDraw.prototype={
 			that.percent+=1/(that.timeSum*60);
 		},1000);
 	},
-	stop:function(){
+	stop:function(percent){ console.log("stop...")
 		//停止时间转动
 		clearInterval(this.timer);
 		this.timer=null;
-		this.percent=0;
+		this.percent=percent||0;
 	}
 }
 
